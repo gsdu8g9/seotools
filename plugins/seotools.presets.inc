@@ -43,7 +43,7 @@ function _seotools_presets() {
         ),
         'globalredirect' => array(
           'name' => 'Global Redirect',
-          'version' => '6.x-2.3',
+          'version' => '6.x-1.2',
         ),
         'xmlsitemap' => array(
           'name' => 'XML Sitemap',
