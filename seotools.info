@@ -1,0 +1,6 @@
+; $Id: seotools.info,v 1.2 2010/09/26 00:36:50 tomdude48 Exp $
+name = "SEO Tools"
+description = "Provides assortment of tools for improving search engine rankings."
+package = Content analysis
+core = 6.x
+dependencies[] = presets

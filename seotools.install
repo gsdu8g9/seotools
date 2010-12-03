@@ -1,0 +1,43 @@
+<?php
+// $Id: seotools.install,v 1.2 2010/09/26 00:36:50 tomdude48 Exp $
+
+/**
+ *  Implementation of hook_install().
+ */
+function seotools_install() {
+  drupal_install_schema('seotools');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function seotools_uninstall() {
+  drupal_uninstall_schema('seotools');
+  drupal_set_message(t('SEO Tools has been uninstalled.'));  
+}
+
+/**
+ *  Implementation of hook_schema
+ */
+function seotools_schema() {
+  $schema['seotools_node'] = array(
+    'description' => 'Creates database table to store keyword data.',
+    'fields' => array(
+      'kid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'description' => 'The nid.',  
+      ), //kid
+      'stats_update' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'description' => 'timestamp of last data update',  
+      ), //stats_update
+    ),
+    'primary key' => array('kid'),
+  );
+
+  return $schema;
+}
