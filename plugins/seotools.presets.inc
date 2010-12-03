@@ -17,6 +17,11 @@ function _seotools_presets() {
         ),
         'wordstream' => array(
           'name' => 'Wordstream',
+          'footer' => 'To change the settings, go to ' . l('admin/settings/wordstream', 'admin/settings/wordstream'),
+          'settings' => array(
+            'wordstream_username',
+            'wordstream_free_embed_id',
+          ),
         ),
         'nodewords' => array(
           'name' => 'Node Words',
@@ -31,6 +36,7 @@ function _seotools_presets() {
           'settings' => array(
             'nodes',
           ),
+          'footer' => 'To change the settings, go to ' . l('admin/content/page_title', 'admin/content/page_title'),
         ),
         'globalredirect' => array(
           'name' => 'Global Redirect'
@@ -60,6 +66,7 @@ function _seotools_presets() {
           'settings' => array(
             'alchemy_apikey',
           ),
+          'footer' => 'To change the settings, go to ' . l('admin/settings/alchemy', 'admin/settings/alchemy'),
         ),
         'kwresearch' => array(
           'name' => 'Keyword Research',
@@ -70,6 +77,7 @@ function _seotools_presets() {
             'kwresearch_apikey',
             'kwresearch_keyword_sync_vocabulary',
           ),
+          'footer' => 'To change the settings, go to ' . l('admin/settings/kwresearch', 'admin/settings/kwresearch'),
         ),
       ),
     ),
@@ -196,6 +204,70 @@ function seotools_alchemy_alchemy_apikey_form() {
         '!alchemy_link' => l(t('Get an Alchemy API key here'), 'http://www.alchemyapi.com/api/register.html', array('attributes' => array('target' => '_blank'))),
       )
     ),
+  );
+  return system_settings_form($form);
+}
+
+function seotools_wordstream_wordstream_username() {
+  $setting = array();
+  $setting['title'] = 'Wordstream API Account';
+  if (variable_get('wordstream_username', '') == '' || variable_get('wordstream_password', '') == '') {
+    $setting['value'] = drupal_get_form('seotools_wordstream_wordstream_username_form');
+    $setting['severity'] = REQUIREMENT_ERROR;
+  }
+  else {
+    $setting['value'] = 'Wordstream API Username set to: ' . variable_get('wordstream_username', '');
+    $setting['severity'] = REQUIREMENT_OK;
+  }
+
+  return $setting;
+}
+
+function seotools_wordstream_wordstream_username_form() {
+  $form['wordstream_username'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Wordstream API Username'),
+    '#default_value' => variable_get('wordstream_username', ''),
+  );
+  $form['wordstream_password'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Wordstream API Password'),
+    '#default_value' => variable_get('wordstream_password', ''),
+    '#description' => t('In order to enable the API tools you will need a WordStream account login (username & password). !wordstream_link.',
+      array(
+        '!wordstream_link' => l(t('Get your API account here'), WORDSTREAM_LINK_API_ACCOUNT, array('attributes' => array('target', 'wordstream'))),
+      )
+    ),
+  );
+  return system_settings_form($form);
+}
+
+function seotools_wordstream_wordstream_free_embed_id() {
+  $setting = array();
+  $setting['title'] = 'Free widgets embed id';
+  if (variable_get('wordstream_free_embed_id', '') == '') {
+    $setting['value'] = drupal_get_form('seotools_wordstream_wordstream_free_embed_id_form');
+    $setting['severity'] = REQUIREMENT_ERROR;
+  }
+  else {
+    $setting['value'] = 'Wordstream Free widgets embed id: ' . variable_get('wordstream_free_embed_id', '');
+    $setting['severity'] = REQUIREMENT_OK;
+  }
+
+  return $setting;
+}
+
+function seotools_wordstream_wordstream_free_embed_id_form() {
+  $form['wordstream_free_embed_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Free widgets embed id'),
+    '#description' => t(''),
+    '#default_value' => variable_get('wordstream_free_embed_id', ''),
+    '#description' => t('In order to enable the free javascript tools you will need a WordStream widget embed id. <br>The embed id is a part of the widget embed code that you can generate on the WordStream site. <br>Enter in the field above the 20 character value following "embed_id=" in the widget embed code.<br> !wordstream_link.',
+      array(
+        '!wordstream_link' => l(t('Get your embed code here'), WORDSTREAM_LINK_WIDGET_GENERATOR, array('attributes' => array('target', 'wordstream'))),
+      )
+    )
   );
   return system_settings_form($form);
 }
