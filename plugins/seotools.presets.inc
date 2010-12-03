@@ -52,12 +52,6 @@ function _seotools_presets() {
         'contentoptimizer' => array(
           'name' => 'Content Optimizer'
         ),
-        'scribeseo' => array(
-          'name' => 'Scribe SEO',
-          'settings' => array(
-            'scribeseo_apikey',
-          ),
-        ),
         'alchemy' => array(
           'name' => 'Alchemy',
           'submodules' => array(
@@ -175,31 +169,6 @@ function seotools_page_title_nodes_reset() {
     $key = 'page_title_type_'. $type->type . '_showfield';
     variable_set($key, 1);
   }
-}
-
-function seotools_scribeseo_scribeseo_apikey() {
-  $setting = array();
-  $setting['title'] = 'API Key';
-  if (variable_get('scribeseo_apikey', '') == '') {
-    $setting['value'] = drupal_get_form('seotools_scribeseo_scribeseo_apikey_form');
-    $setting['severity'] = REQUIREMENT_ERROR;
-  }
-  else {
-    $setting['value'] = 'Scribe SEO API Key set to: ' . variable_get('scribeseo_apikey', 0);
-    $setting['severity'] = REQUIREMENT_OK;
-  }
-
-  return $setting;
-}
-
-function seotools_scribeseo_scribeseo_apikey_form() {
-  $form['scribeseo_apikey'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Scribe API Key'),
-    '#default_value' => variable_get('scribeseo_apikey', ''),
-    '#description' => t('You will need a Scribe SEO API Key to enable analysis. <a href="' . SCRIBESEO_LINK_GETKEY . '" target="_blank">Get your API key here</a>.'),
-  );
-  return system_settings_form($form);
 }
 
 function seotools_alchemy_alchemy_apikey() {
