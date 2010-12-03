@@ -17,6 +17,7 @@ function _seotools_presets() {
         ),
         'wordstream' => array(
           'name' => 'Wordstream',
+          'version' => '6.x-1.0-alpha1',
           'footer' => 'To change the settings, go to ' . l('admin/settings/wordstream', 'admin/settings/wordstream'),
           'settings' => array(
             'wordstream_username',
@@ -25,6 +26,7 @@ function _seotools_presets() {
         ),
         'nodewords' => array(
           'name' => 'Node Words',
+          'version' => '6.x-1.11',
           'submodules' => array(
             'nodewords_extra',
             'nodewords_verification_tags',
@@ -33,16 +35,19 @@ function _seotools_presets() {
         ),
         'page_title' => array(
           'name' => 'Page Title',
+          'version' => '6.x-2.3',
           'settings' => array(
             'nodes',
           ),
           'footer' => 'To change the settings, go to ' . l('admin/content/page_title', 'admin/content/page_title'),
         ),
         'globalredirect' => array(
-          'name' => 'Global Redirect'
+          'name' => 'Global Redirect',
+          'version' => '6.x-2.3',
         ),
         'xmlsitemap' => array(
           'name' => 'XML Sitemap',
+          'version' => '6.x-2.0-beta1',
           'submodules' => array(
             'xmlsitemap_custom',
             'xmlsitemap_node',
@@ -53,13 +58,16 @@ function _seotools_presets() {
            ),
         ),
         'contentanalysis' => array(
-          'name' => 'Content Analysis'
+          'name' => 'Content Analysis',
+          'version' => '6.x-1.4',
         ),
         'contentoptimizer' => array(
-          'name' => 'Content Optimizer'
+          'name' => 'Content Optimizer',
+          'version' => '6.x-2.1',
         ),
         'alchemy' => array(
           'name' => 'Alchemy',
+          'version' => '6.x-1.0-rc4',
           'submodules' => array(
             'alchemy_contentanalysis',
           ),
@@ -70,6 +78,7 @@ function _seotools_presets() {
         ),
         'kwresearch' => array(
           'name' => 'Keyword Research',
+          'version' => '6.x-1.0-rc4',
           'submodules' => array(
             'kwresearch_google',
           ),
