@@ -69,6 +69,9 @@ function _seotools_presets() {
             'xmlsitemap_menu',
             'xmlsitemap_taxonomy',
            ),
+          'settings' => array(
+            'vocabularies',
+          ),
         ),
         'contentanalysis' => array(
           'name' => 'Content Analysis',
@@ -232,6 +235,43 @@ function seotools_page_title_nodes() {
   }
 
   return $setting;
+}
+
+function seotools_xmlsitemap_vocabularies() {
+  $vocabs = taxonomy_get_vocabularies();
+  $setting = array();
+  $setting['title'] = 'Taxonomies';
+  $settings = array(
+    'status' => '1',
+    'priority' => '0.5',
+  );
+  $different = array();
+  foreach($vocabs as $vid => $vocab) {
+    if ((array_diff(variable_get('xmlsitemap_settings_taxonomy_term_' . $vid, array()), $settings))) {
+      $different[$vid] = $vocab->name;
+    }
+  }
+  if (empty($different)) {
+    $setting['value'] = 'All taxonomies are set for xmlsitemap.';
+    $setting['severity'] = REQUIREMENT_OK;
+  }
+  else {
+    $setting['value'] = implode($different, ', ' ) . ' vocabularies not set correctly.';
+    $setting['severity'] = REQUIREMENT_ERROR;
+  }
+
+  return $setting;
+}
+
+function seotools_xmlsitemap_vocabularies_reset() {
+  $vocabs = taxonomy_get_vocabularies();
+  $settings = array(
+    'status' => '1',
+    'priority' => '0.5',
+  );
+  foreach($vocabs as $vid => $vocab) {
+    variable_set('xmlsitemap_settings_taxonomy_term_' . $vid, $settings);
+  }
 }
 
 function seotools_page_title_nodes_reset() {
