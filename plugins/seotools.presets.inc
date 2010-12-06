@@ -6,7 +6,7 @@ function _seotools_presets() {
       'title' => 'SEO Tools',
       'description' => 'Presets for SEO optimization',
       'file' => 'plugins/seotools.presets.inc',
-      'modules_footer' => l('Download all modules', 'http://leveltendesign.com') . ' from LevelTen Design',
+      'modules_footer' => l('Download all modules', 'http://leveltendesign.com') . ' from LevelTen Interactive',
       'modules' => array(
         'seotools' => array(
           'name' => 'SEO Tools',
@@ -14,6 +14,12 @@ function _seotools_presets() {
           'settings' => array(
             'seotools_uid'
           ),
+        ),
+        'path' => array(
+          'name' => 'Path (Core)',
+        ),
+        'taxonomy' => array(
+          'name' => 'Taxonomy (Core)',
         ),
         'wordstream' => array(
           'name' => 'Wordstream',
@@ -130,7 +136,13 @@ function seotools_seotools_seotools_uid_form() {
 }
 
 function seotools_seotools_seotools_uid_reset() {
-  if(!variable_get('seotools_uid', 0)) {
+  // Check if the user already exists.
+  $result = db_query("SELECT uid FROM {users} WHERE name='%s'", 'SEO Tools');
+  if($row = db_fetch_array($result)) {
+    $uid = $row['uid'];
+  }
+  // If the user was not found, generate a new user.
+  if (!isset($uid)) {
     $details = array(
       'name' => 'SEO Tools',
       'pass' => substr(md5(rand()), 0, 10),
@@ -138,10 +150,12 @@ function seotools_seotools_seotools_uid_reset() {
       'access' => 0,
       'status' => 1
     );
-
     $user = user_save(NULL, $details);
-    variable_set('seotools_uid', $user->uid);
+    $uid = $user->uid;
     drupal_set_message('A user was generated for you.');
+  }
+  if(!variable_get('seotools_uid', 0)) {
+    variable_set('seotools_uid', $uid);
   }
 }
 
@@ -346,19 +360,32 @@ function seotools_kwresearch_kwresearch_keyword_sync_vocabulary_form() {
 }
 
 function seotools_kwresearch_kwresearch_keyword_sync_vocabulary_reset() {
-  $tags = array(
-    'name' => 'Keywords',
-    'description' => 'generated vocabulary for keyword content',
-    'tags' => 1,
-    'relations' => 1,
-    'module' => 'taxonomy',
-    'nodes' => array_combine(array_keys(node_get_types()), array_keys(node_get_types())),
-  );
-  taxonomy_save_vocabulary($tags);
+  // First search if the vocabulary has already been created.
+  $vocabularies = taxonomy_get_vocabularies();
+  if (is_array($vocabularies)) {
+    foreach($vocabularies as $vid => $info) {
+      if ($info->name == 'Keywords') {
+        $tags = (array) $info;
+      }
+    }
+  }
+  // If it doesn't exist yet, create it.
+  if (!isset($tags)) {
+    $tags = array(
+      'name' => 'Keywords',
+      'description' => 'generated vocabulary for keyword content',
+      'tags' => 1,
+      'relations' => 1,
+      'module' => 'taxonomy',
+      'nodes' => array_combine(array_keys(node_get_types()), array_keys(node_get_types())),
+    );
+    taxonomy_save_vocabulary($tags);
+    drupal_set_message('A keyword vocabulary was generated for you.');
+  }
+  // Set the variables for the tags vocabulary.
   variable_set('kwresearch_keyword_sync_vocabulary', $tags['vid']);
   $report_vocabs = variable_get('kwresearch_report_vocabulary', array());
   $report_vocabs[$tags['vid']] = $tags['vid'];
   variable_set('kwresearch_report_vocabulary', $report_vocabs);
-  drupal_set_message('A keyword vocabulary was generated for you.');
 }
 
