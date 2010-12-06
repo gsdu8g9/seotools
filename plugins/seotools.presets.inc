@@ -6,13 +6,14 @@ function _seotools_presets() {
       'title' => 'SEO Tools',
       'description' => 'Presets for SEO optimization',
       'file' => 'plugins/seotools.presets.inc',
-      'modules_footer' => l('Download all modules', 'http://leveltendesign.com') . ' from LevelTen Interactive',
+      'modules_footer' => l('Download seo modules', 'http://leveltendesign.com') . ' from LevelTen Interactive',
       'modules' => array(
         'seotools' => array(
           'name' => 'SEO Tools',
           'footer' => 'To change the settings, go to ' . l('admin/settings/seotools', 'admin/settings/seotools'),
           'settings' => array(
-            'seotools_uid'
+            'seotools_uid',
+            'seotools_feature',
           ),
         ),
         'path' => array(
@@ -20,6 +21,12 @@ function _seotools_presets() {
         ),
         'taxonomy' => array(
           'name' => 'Taxonomy (Core)',
+        ),
+        'features' => array(
+          'name' => 'Features',
+        ),
+        'strongarm' => array(
+          'name' => 'Strongarm',
         ),
         'wordstream' => array(
           'name' => 'Wordstream',
@@ -157,6 +164,40 @@ function seotools_seotools_seotools_uid_reset() {
   if(!variable_get('seotools_uid', 0)) {
     variable_set('seotools_uid', $uid);
   }
+}
+
+function seotools_seotools_seotools_feature() {
+  if (module_exists('features')) {
+    module_load_include('inc', 'features', 'features.export');
+    $status = features_get_storage('seotools');
+    $setting = array();
+    $setting['title'] = 'SEO Feature';
+    if ($status == 0) {
+      $setting['value'] = 'Feature is default';
+      $setting['severity'] = 0;
+    }
+    else {
+      $setting['value'] = 'Feature is overridden';
+      $setting['description'] = l('Review overrides' , 'admin/build/features/seotools');
+      $setting['severity'] = REQUIREMENT_ERROR;
+    }
+
+    return $setting;
+  }
+}
+
+function seotools_seotools_seotools_feature_reset() {
+  module_load_include('inc', 'features', 'features.export');
+  features_include();
+  $module = 'seotools';
+  $seotools = features_get_features($module);
+  $revert = array();
+  foreach ($seotools->info['features'] as $component => $status) {
+    $revert[$module][] = $component;
+    drupal_set_message(t('Reverted all <strong>!component</strong> components for <strong>!module</strong>.', array('!component' => $component, '!module' => $module)));
+  }
+  features_revert($revert);
+
 }
 
 function seotools_page_title_nodes() {

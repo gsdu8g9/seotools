@@ -1,6 +1,15 @@
-; $Id: seotools.info,v 1.2 2010/09/26 00:36:50 tomdude48 Exp $
-name = "SEO Tools"
+core = "6.x"
+dependencies[] = "presets"
 description = "Provides assortment of tools for improving search engine rankings."
-package = Content analysis
-core = 6.x
-dependencies[] = presets
+features[ctools][] = "strongarm:strongarm:1"
+features[variable][] = "xmlsitemap_batch_limit"
+features[variable][] = "xmlsitemap_chunk_size"
+features[variable][] = "xmlsitemap_engines_engines"
+features[variable][] = "xmlsitemap_engines_minimum_lifetime"
+features[variable][] = "xmlsitemap_frontpage_changefreq"
+features[variable][] = "xmlsitemap_frontpage_priority"
+features[variable][] = "xmlsitemap_minimum_lifetime"
+features[variable][] = "xmlsitemap_prefetch_aliases"
+features[variable][] = "xmlsitemap_xsl"
+name = "SEO Tools"
+package = "Content analysis"
