@@ -28,6 +28,14 @@ function _seotools_presets() {
         'strongarm' => array(
           'name' => 'Strongarm',
         ),
+        'googleanalytics' => array(
+          'name' => 'Google Analytics',
+          'version' => '6.x-3.0',
+          'settings' => array(
+            'googleanalytics_account',
+          ),
+          'footer' => 'To change the settings, go to ' . l('admin/settings/googleanalytics', 'admin/settings/googleanalytics'),
+        ),
         'wordstream' => array(
           'name' => 'Wordstream',
           'version' => '6.x-1.0-alpha1',
@@ -106,6 +114,10 @@ function _seotools_presets() {
             'kwresearch_keyword_sync_vocabulary',
           ),
           'footer' => 'To change the settings, go to ' . l('admin/settings/kwresearch', 'admin/settings/kwresearch'),
+        ),
+        'w3c_validator' => array(
+          'name' => 'W3C Validator',
+          'version' => '6.x-1.2',
         ),
       ),
     ),
@@ -367,6 +379,41 @@ function seotools_xmlsitemap_menus_reset() {
     variable_set('xmlsitemap_settings_menu_' . $type, $settings);
   }
 }
+
+function seotools_googleanalytics_googleanalytics_account() {
+  $setting = array();
+  $setting['title'] = 'Account Key';
+  if (variable_get('googleanalytics_account', 'UA-') == 'UA-') {
+    $setting['value'] = drupal_get_form('seotools_googleanalytics_googleanalytics_account_form');
+    $setting['severity'] = REQUIREMENT_ERROR;
+  }
+  else {
+    $setting['value'] = 'Google Analytics Account Key set to: ' . variable_get('googleanalytics_account', '');
+    $setting['severity'] = REQUIREMENT_OK;
+  }
+
+  return $setting;
+}
+
+function seotools_googleanalytics_googleanalytics_account_form() {
+  $form['account']['googleanalytics_account'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Google Analytics account number'),
+    '#default_value' => variable_get('googleanalytics_account', 'UA-'),
+    '#size' => 15,
+    '#maxlength' => 20,
+    '#required' => TRUE,
+    '#description' => t('The account number is unique to the websites domain. Click the <strong>Edit</strong> link in your Google Analytics account next to the appropriate profile on the <strong>Analytics Settings</strong> page, then select <strong>Check Status</strong> at the top-right of the table to find the account number (UA-xxxx-x) of your site. You can obtain a user account from the <a href="@url">Google Analytics</a> website.', array('@url' => 'http://www.google.com/analytics/')),
+  );
+  return system_settings_form($form);
+}
+
+function seotools_googleanalytics_googleanalytics_account_form_validate($form, &$form_state) {
+  if (!preg_match('/^UA-\d{4,}-\d+$/', $form_state['values']['googleanalytics_account'])) {
+    form_set_error('googleanalytics_account', t('A valid Google Analytics account number is case sensitive and formatted like UA-xxxxxx-x.'));
+  }
+}
+
 
 function seotools_alchemy_alchemy_apikey() {
   $setting = array();
