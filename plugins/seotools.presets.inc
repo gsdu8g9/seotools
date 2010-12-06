@@ -71,7 +71,9 @@ function _seotools_presets() {
            ),
           'settings' => array(
             'vocabularies',
+            'content_types',
           ),
+          'footer' => 'To change the settings, go to ' . l('admin/settings/xmlsitemap', 'admin/settings/xmlsitemap'),
         ),
         'contentanalysis' => array(
           'name' => 'Content Analysis',
@@ -240,14 +242,14 @@ function seotools_page_title_nodes() {
 function seotools_xmlsitemap_vocabularies() {
   $vocabs = taxonomy_get_vocabularies();
   $setting = array();
-  $setting['title'] = 'Taxonomies';
+  $setting['title'] = 'Vocabularies';
   $settings = array(
     'status' => '1',
     'priority' => '0.5',
   );
   $different = array();
   foreach($vocabs as $vid => $vocab) {
-    if ((array_diff(variable_get('xmlsitemap_settings_taxonomy_term_' . $vid, array()), $settings))) {
+    if ((array_diff(variable_get('xmlsitemap_settings_taxonomy_term_' . $vid, array(FALSE)), $settings))) {
       $different[$vid] = $vocab->name;
     }
   }
@@ -271,6 +273,47 @@ function seotools_xmlsitemap_vocabularies_reset() {
   );
   foreach($vocabs as $vid => $vocab) {
     variable_set('xmlsitemap_settings_taxonomy_term_' . $vid, $settings);
+  }
+}
+
+function seotools_xmlsitemap_content_types() {
+  $types = node_get_types();
+  $setting = array();
+  $setting['title'] = 'Content Types';
+  $settings = array(
+    'status' => '1',
+    'priority' => '0.5',
+  );
+  $different = array();
+  foreach($types as $type => $info) {
+    if ((array_diff(variable_get('xmlsitemap_settings_node_' . $type, array(FALSE)), $settings))) {
+      $different[$type] = $info->name;
+    }
+  }
+  if (empty($different)) {
+    $setting['value'] = 'All content types are set for xmlsitemap.';
+    $setting['severity'] = REQUIREMENT_OK;
+  }
+  elseif (count($different) > 0) { // If some content types are set, only post a warning.
+    $setting['value'] = implode($different, ', ' ) . ' content types not set to use xmlsitemaps.';
+    $setting['severity'] = REQUIREMENT_WARNING;
+  }
+  else {
+    $setting['value'] = implode($different, ', ' ) . ' content types not set to use xmlsitemaps.';
+    $setting['severity'] = REQUIREMENT_ERROR;
+  }
+
+  return $setting;
+}
+
+function seotools_xmlsitemap_content_types_reset() {
+  $types = node_get_types();
+  $settings = array(
+    'status' => '1',
+    'priority' => '0.5',
+  );
+  foreach($types as $type => $info) {
+    variable_set('xmlsitemap_settings_node_' . $type, $settings);
   }
 }
 
