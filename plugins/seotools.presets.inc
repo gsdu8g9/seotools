@@ -6,7 +6,7 @@ function _seotools_presets() {
       'title' => 'SEO Tools',
       'description' => 'Presets for SEO optimization',
       'file' => 'plugins/seotools.presets.inc',
-      'modules_footer' => l('Download seo modules', 'http://leveltendesign.com') . ' from LevelTen Interactive',
+      'modules_footer' => 'SeoTools created by LevelTen Interactive',
       'modules' => array(
         'seotools' => array(
           'name' => 'SEO Tools',
@@ -28,6 +28,7 @@ function _seotools_presets() {
           'name' => 'Strongarm',
         ),
         'googleanalytics' => array(
+          'project' => 'google_analytics',
           'name' => 'Google Analytics',
           'version' => '6.x-3.0',
           'settings' => array(
