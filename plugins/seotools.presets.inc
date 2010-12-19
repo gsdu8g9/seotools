@@ -118,6 +118,19 @@ function _seotools_presets() {
           'name' => 'W3C Validator',
           'version' => '6.x-1.2',
         ),
+        'linkintel' => array(
+          'name' => 'Link Intelligence',
+          'version' => '6.x-1.0-rc1',
+          'submodules' => array(
+            'linkintel_cck',
+            'linkintel_stemmer',
+          ),
+          'settings' => array(
+            'request_sync_tax_vocabs',
+            'suggestions_seed_vocabs',
+          ),
+          'footer' => 'To change the settings, go to ' . l('admin/settings/linkintel', 'admin/settings/linkintel'),
+        ),
       ),
     ),
   );
@@ -539,5 +552,102 @@ function seotools_kwresearch_kwresearch_keyword_sync_vocabulary_reset() {
   $report_vocabs = variable_get('kwresearch_report_vocabulary', array());
   $report_vocabs[$tags['vid']] = $tags['vid'];
   variable_set('kwresearch_report_vocabulary', $report_vocabs);
+}
+
+function seotools_linkintel_request_sync_tax_vocabs() {
+  $setting = array();
+  $setting['title'] = 'LinkIntel Sync Vocabularies';
+  if (variable_get('linkintel_request_sync_tax_vocabs', array()) == array()) {
+    $setting['value'] = drupal_get_form('seotools_linkintel_request_sync_tax_vocabs_form');
+    $setting['severity'] = REQUIREMENT_ERROR;
+  }
+  else {
+    $vocabs = variable_get('linkintel_request_sync_tax_vocabs', array());
+    $vocab_names = array();
+    foreach($vocabs as $vid) {
+      $vocab = taxonomy_vocabulary_load($vid);
+      $vocab_names[] = $vocab->name;
+    }
+    $setting['value'] = 'Sync Vocabularies: ' . implode(', ', $vocab_names);
+    $setting['severity'] = 0;
+  }
+
+  return $setting;
+}
+
+function seotools_linkintel_request_sync_tax_vocabs_form() {
+  $vocabs = taxonomy_get_vocabularies();
+  $options = array();
+  if(!empty($vocabs)) {
+    foreach ($vocabs AS $vid => $v) {
+      $options[$vid] = $v->name;
+    }
+    $form['tax_vocabs']['linkintel_request_sync_tax_vocabs'] = array(
+      '#type' => 'checkboxes',
+      '#options' => $options,
+      '#default_value' => (isset($settings->request_sync_tax_vocabs)) ? $settings->request_sync_tax_vocabs : array(),
+      '#description' => t('Select vocabularies to sync requests.')
+    );
+  }
+  else {
+    $form['tax_vocabs']['linkintel_request_sync_tax_vocabs'] = array(
+      '#type' => 'item',
+      '#value' => t('There are currently no taxonomy vocabularies to sync. !link',
+        array(
+          '!link' => l(t('Click here to create a vocabulary.'), 'admin/content/taxonomy/add/vocabulary'),
+        )
+      ),
+    );
+  }
+  return system_settings_form($form);
+}
+
+function seotools_linkintel_suggestions_seed_vocabs() {
+  $setting = array();
+  $setting['title'] = 'LinkIntel Seed Vocabularies';
+  if (variable_get('linkintel_suggestions_seed_vocabs', array()) == array()) {
+    $setting['value'] = drupal_get_form('seotools_linkintel_suggestions_seed_vocabs_form');
+    $setting['severity'] = REQUIREMENT_ERROR;
+  }
+  else {
+    $vocabs = variable_get('linkintel_suggestions_seed_vocabs', array());
+    $vocab_names = array();
+    foreach($vocabs as $vid) {
+      $vocab = taxonomy_vocabulary_load($vid);
+      $vocab_names[] = $vocab->name;
+    }
+    $setting['value'] = 'Seed Vocabularies: ' . implode(', ', $vocab_names);
+    $setting['severity'] = 0;
+  }
+
+  return $setting;
+}
+
+function seotools_linkintel_suggestions_seed_vocabs_form() {
+  $vocabs = taxonomy_get_vocabularies();
+  $options = array();
+  if(!empty($vocabs)) {
+    foreach ($vocabs AS $vid => $v) {
+        $options[$vid] = $v->name;
+    }
+    $form['seeding']['linkintel_suggestions_seed_vocabs'] = array(
+      '#type' => 'checkboxes',
+      '#title' => t('Seed vocabularies'),
+      '#options' => $options,
+      '#default_value' => variable_get('linkintel_suggestions_seed_vocabs', array()),
+      '#description' => t('Select vocabularies to gather terms for seeding the link suggestions tool.')
+    );
+  }
+  else {
+    $form['tax_vocabs']['linkintel_suggestions_seed_vocabs'] = array(
+      '#type' => 'item',
+      '#value' => t('There are currently no taxonomy vocabularies to sync. !link',
+        array(
+          '!link' => l(t('Click here to create a vocabulary.'), 'admin/content/taxonomy/add/vocabulary'),
+        )
+      ),
+    );
+  }
+  return system_settings_form($form);
 }
 
