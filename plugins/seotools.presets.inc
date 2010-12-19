@@ -12,7 +12,6 @@ function _seotools_presets() {
           'name' => 'SEO Tools',
           'footer' => 'To change the settings, go to ' . l('admin/settings/seotools', 'admin/settings/seotools'),
           'settings' => array(
-            'seotools_uid',
             'seotools_feature',
           ),
         ),
@@ -38,7 +37,7 @@ function _seotools_presets() {
         ),
         'wordstream' => array(
           'name' => 'Wordstream',
-          'version' => '6.x-1.0-alpha1',
+          'version' => '6.x-1.0-alpha2',
           'footer' => 'To change the settings, go to ' . l('admin/settings/wordstream', 'admin/settings/wordstream'),
           'settings' => array(
             'wordstream_username',
@@ -90,7 +89,7 @@ function _seotools_presets() {
         ),
         'contentoptimizer' => array(
           'name' => 'Content Optimizer',
-          'version' => '6.x-2.1',
+          'version' => '6.x-2.2',
         ),
         'alchemy' => array(
           'name' => 'Alchemy',
@@ -122,66 +121,6 @@ function _seotools_presets() {
       ),
     ),
   );
-}
-
-function seotools_seotools_seotools_uid() {
-  $setting = array();
-  if (variable_get('seotools_uid', 0) == 0) {
-    $setting['title'] = 'SEO User';
-    $setting['value'] = drupal_get_form('seotools_seotools_seotools_uid_form');
-    $setting['severity'] = REQUIREMENT_ERROR;
-  }
-  else {
-    $account = user_load(variable_get('seotools_uid', 0));
-    $setting['title'] = 'SEO User';
-    $setting['value'] = 'User set to: ' . $account->name . ' (' . $account->uid . ')';
-    $setting['severity'] = 0;
-  }
-
-  return $setting;
-}
-
-function seotools_seotools_seotools_uid_form() {
-  // Populate the users array
-  $users = array();
-  $result = db_query("select uid, name from {users} LIMIT 100");
-  while($row = db_fetch_array($result)) {
-    $users[$row['uid']] = $row['name'];
-  }
-  $users[0] = 'anonymous';
-
-  $form['seotools_uid'] = array(
-    '#type' => 'select',
-    '#title' => t('Autotag User'),
-    '#default_value' => variable_get('seotools_uid', 0),
-    '#options' => $users,
-    '#description' => '<div>When autotagging with cron, a user needs to be assigned to automatically tag content.',
-  );
-  return system_settings_form($form);
-}
-
-function seotools_seotools_seotools_uid_reset() {
-  // Check if the user already exists.
-  $result = db_query("SELECT uid FROM {users} WHERE name='%s'", 'SEO Tools');
-  if($row = db_fetch_array($result)) {
-    $uid = $row['uid'];
-  }
-  // If the user was not found, generate a new user.
-  if (!isset($uid)) {
-    $details = array(
-      'name' => 'SEO Tools',
-      'pass' => substr(md5(rand()), 0, 10),
-      'mail' => 'manager@seotools.com',
-      'access' => 0,
-      'status' => 1
-    );
-    $user = user_save(NULL, $details);
-    $uid = $user->uid;
-    drupal_set_message('A user was generated for you.');
-  }
-  if(!variable_get('seotools_uid', 0)) {
-    variable_set('seotools_uid', $uid);
-  }
 }
 
 function seotools_seotools_seotools_feature() {
