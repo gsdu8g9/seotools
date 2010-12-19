@@ -519,7 +519,7 @@ function seotools_kwresearch_kwresearch_keyword_sync_vocabulary_form() {
     '#title' => 'Vocabulary for Autotagging Keywords',
     '#options' => $vocab_options,
     '#default_value' => variable_get('kwresearch_keyword_sync_vocabulary', 0),
-    '#description' => '<div>In order to use autotagging, it must be associated with a vocabulary.  Please select a vocabulary to use.</div><div> ' . l('Automatically generate a vocabulary', 'admin/settings/seotools/settings/kwresearch/taxonomy') . '</div>',
+    '#description' => '<div>In order to use autotagging, it must be associated with a vocabulary.  Please select a vocabulary to use.</div>',
   );
   return system_settings_form($form);
 }
