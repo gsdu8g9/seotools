@@ -355,7 +355,7 @@ function seotools_googleanalytics_googleanalytics_account_form() {
     '#size' => 15,
     '#maxlength' => 20,
     '#required' => TRUE,
-    '#description' => t('The account number is unique to the websites domain. Click the <strong>Edit</strong> link in your Google Analytics account next to the appropriate profile on the <strong>Analytics Settings</strong> page, then select <strong>Check Status</strong> at the top-right of the table to find the account number (UA-xxxx-x) of your site. You can obtain a user account from the <a href="@url">Google Analytics</a> website.', array('@url' => 'http://www.google.com/analytics/')),
+    '#description' => t('The account number is unique to the websites domain. Click the <strong>Edit</strong> link in your Google Analytics account next to the appropriate profile on the <br /><strong>Analytics Settings</strong> page, then select <strong>Check Status</strong> at the top-right of the table to find the account number (UA-xxxx-x)<br /> of your site. You can obtain a user account from the <a href="@url">Google Analytics</a> website.', array('@url' => 'http://www.google.com/analytics/')),
   );
   return system_settings_form($form);
 }
