@@ -52,7 +52,6 @@ function _seotools_presets() {
           'version' => '6.x-1.3',
           'submodules' => array(
             'system_charts',
-            'chart_views',
           ),
         ),
         'countries_api' => array(
@@ -132,7 +131,7 @@ function _seotools_presets() {
         ),
         'kwresearch' => array(
           'name' => 'Keyword Research',
-          'version' => '6.x-1.0-rc4',
+          'version' => '6.x-1.0-rc5',
           'submodules' => array(
             'kwresearch_google',
           ),
@@ -148,7 +147,7 @@ function _seotools_presets() {
         ),
         'linkintel' => array(
           'name' => 'Link Intelligence',
-          'version' => '6.x-1.0-rc2',
+          'version' => '6.x-1.0-rc3',
           'submodules' => array(
             'linkintel_cck',
             'linkintel_stemmer',

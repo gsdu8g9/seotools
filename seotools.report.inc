@@ -2,6 +2,10 @@
 // $Id:$
 
 function seotools_dashboard_page($range = 30) {
+  //Check that kwresearch and linkintel are install as this will crash if not.
+  if (!(module_exists('kwresearch') && module_exists('linkintel'))) {
+    return t('SEO Tools has not been configured properly.  Please go to ' . l('seotools presets', 'admin/presets/seotools') . ' and ensure that it is configured properly.');
+  }
   drupal_add_css(drupal_get_path('module', 'seotools') . '/seotools.css');
   drupal_add_js(drupal_get_path('module', 'seotools') . '/seotools.js');
 
@@ -9,8 +13,8 @@ function seotools_dashboard_page($range = 30) {
   if(!$gid) {
     return t('Google Analytics id not set.');
   }
-  // TODO make this dynamic
-  $siteURL = 'http://www.leveltendesign.com/';
+  global $base_url;
+  $siteURL = variable_get('seotools_base_url', $base_url);
 
   $e = explode('-', $range);
   if(count($e) == 1) {
