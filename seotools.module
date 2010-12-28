@@ -1,11 +1,11 @@
 <?php
-// $Id: seotools.module,v 1.3 2010/09/26 00:36:50 tomdude48 Exp $
+// $Id:$
 
 include_once('seotools.features.inc');
 
 /**
  *  Implementation of hook_menu()
- *  
+ *
  */
 function seotools_menu() {
   $items = array();
@@ -19,7 +19,40 @@ function seotools_menu() {
     'type' => MENU_NORMAL_ITEM,
     'file' => 'seotools.admin.inc',
   );
+  $items['admin/content/seotools'] = array(
+    'title' => 'SEO Tools Dashboard',
+    'description' => 'View the dashboard for SEO Tools.',
+    'page callback' => 'seotools_dashboard_page',
+    'access callback' => 'user_access',
+    'access arguments' => array('access seo tools'),
+    'type' => MENU_NORMAL_ITEM,
+    'file' => 'seotools.report.inc',
+  );
+
+  $items['seotools/util'] = array(
+    'title' => 'SEO Tools Util',
+    'description' => 'Analyze and optimize node content.',
+    'page callback' => 'seotools_util',
+    'access callback' => 'user_access',
+    'access arguments' => array('admin seo tools'),
+    'type' => MENU_CALLBACK,
+  );
   return $items;
+}
+
+function seotools_util() {
+  $date_range = seotools_get_dates(31);
+
+  $time = 60; // - timezone_offset_get();
+  $output = 'OK';
+  return $output;
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function seotools_perm() {
+  return array('admin seo tools', 'access seo tools');
 }
 
 /**

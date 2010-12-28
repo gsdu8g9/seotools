@@ -1,5 +1,5 @@
 <?php
-// $Id: seotools.install,v 1.2 2010/09/26 00:36:50 tomdude48 Exp $
+// $Id:$
 
 /**
  *  Implementation of hook_install().
@@ -13,30 +13,51 @@ function seotools_install() {
  */
 function seotools_uninstall() {
   drupal_uninstall_schema('seotools');
-  drupal_set_message(t('SEO Tools has been uninstalled.'));  
+  drupal_set_message(t('SEO Tools has been uninstalled.'));
 }
 
 /**
  *  Implementation of hook_schema
  */
 function seotools_schema() {
-  $schema['seotools_node'] = array(
+  $schema['seotools_cache'] = array(
     'description' => 'Creates database table to store keyword data.',
     'fields' => array(
-      'kid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
+      'cid' => array(
+        'type' => 'varchar',
+        'length' => '255',
         'not null' => TRUE,
-        'description' => 'The nid.',  
-      ), //kid
-      'stats_update' => array(
+        'default' => '',
+        'description' => 'cache id.',
+      ),
+      'data' => array(
+        'type' => 'text',
+        'description' => 'stores the cached data',
+      ),
+      'start_date' => array(
+        'type' => 'char',
+        'length' => '10',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'start date of query',
+      ),
+      'end_date' => array(
+        'type' => 'char',
+        'length' => '10',
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'end date of query',
+      ),
+      'records' => array(
         'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-        'description' => 'timestamp of last data update',  
-      ), //stats_update
+        'size' => 'small',
+        'description' => 'number of records in data',
+      ), //autogen
     ),
-    'primary key' => array('kid'),
+    'indexes' => array(
+      'cid' => array('cid'),
+      'start_date' => array('start_date'),
+    ),
   );
 
   return $schema;

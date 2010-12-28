@@ -36,6 +36,33 @@ function _seotools_presets() {
           ),
           'footer' => 'To change the settings, go to ' . l('admin/settings/googleanalytics', 'admin/settings/googleanalytics'),
         ),
+        'google_analytics_api' => array(
+          'name' => 'Google Analytics API',
+          'version' => '6.x-1.0-alpha1',
+          'submodules' => array(
+            'google_analytics_reports',
+          ),
+          'settings' => array(
+            'profile_id',
+          ),
+          'footer' => 'To change the settings, go to ' . l('admin/settings/google-analytics-api', 'admin/settings/google-analytics-api'),
+        ),
+        'chart' => array(
+          'name' => 'Chart',
+          'version' => '6.x-1.3',
+          'submodules' => array(
+            'system_charts',
+            'chart_views',
+          ),
+        ),
+        'countries_api' => array(
+          'name' => 'Countries API',
+          'version' => '6.x-1.1',
+        ),
+        'seo_friend' => array(
+          'name' => 'SEO Friend',
+          'version' => '6.x-1.0',
+        ),
         'wordstream' => array(
           'name' => 'Wordstream',
           'version' => '6.x-1.0-alpha2',
@@ -121,7 +148,7 @@ function _seotools_presets() {
         ),
         'linkintel' => array(
           'name' => 'Link Intelligence',
-          'version' => '6.x-1.0-rc1',
+          'version' => '6.x-1.0-rc2',
           'submodules' => array(
             'linkintel_cck',
             'linkintel_stemmer',
@@ -169,6 +196,67 @@ function seotools_seotools_seotools_feature_reset() {
   }
   features_revert($revert);
 
+}
+
+function seotools_google_analytics_api_profile_id() {
+  $setting = array();
+  $setting['title'] = 'Google Analytics Profile';
+  if (variable_get('google_analytics_api_profile_id', 0) != 0) {
+    $profile = google_analytics_api_current_profile();
+    $setting['value'] = $profile->getTitle() . ' (' . $profile->getProfileId() . ')';
+    $setting['severity'] = 0;
+  }
+  else {
+    $setting['value'] = drupal_get_form('seotools_google_analytics_api_profile_id_form');
+    $setting['severity'] = REQUIREMENT_ERROR;
+  }
+
+  return $setting;
+}
+
+function seotools_google_analytics_api_profile_id_form() {
+  module_load_include('inc', 'google_analytics_api', 'google_analytics_api.admin');
+  if (google_analytics_api_check_token()) {
+    $form['login_status'] = array(
+      '#value' => t('<p>Currently you have granted access to a Google Analytics account.  Please choose the profile below that contains statistics for this site.</p>'),
+      '#weight' => -10,
+    );
+    $form['logout'] = array(
+      '#type' => 'submit',
+      '#value' => t('Revoke access'),
+      '#weight' => -5,
+    );
+    $form['profile_id'] = array(
+      '#type' => 'select',
+      '#title' => t('Profile'),
+      '#options' => google_analytics_api_admin_account_data_options(),
+      '#default_value' => variable_get('google_analytics_api_profile_id', 0),
+      '#description' => t('Choose your website\'s profile'),
+      '#required' => TRUE,
+      '#weight' => -2,
+    );
+    $form['buttons']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Save configuration'),
+      '#weight' => 3,
+    );
+    return system_settings_form($form);
+  }
+  else {
+    $form['logout_status'] = array(
+      '#value' => t('<p>In order for you to access your Google Analytics account through Drupal, you need to grant access to your account.  This gives Drupal permission to contact the Google Analytics server and download statistics about your site.</p>'),
+      '#weight' => -10,
+    );
+    $form['buttons']['submit'] = array(
+      '#type' => 'submit',
+      '#value' => t('Grant access to a Google account'),
+    );
+    return $form;
+  }
+}
+
+function seotools_google_analytics_api_profile_id_form_submit($form, &$form_state) {
+  return google_analytics_api_authenticate();
 }
 
 function seotools_page_title_nodes() {
