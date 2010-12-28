@@ -4,6 +4,7 @@ function _seotools_presets() {
   return array(
     'seotools' => array(
       'title' => 'SEO Tools',
+      'version' => 1,
       'description' => 'Presets for SEO optimization',
       'file' => 'plugins/seotools.presets.inc',
       'modules_footer' => 'SeoTools created by LevelTen Interactive',
